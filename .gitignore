@@ -1,3 +1,4 @@
+# IDE
 .idea
 .vscode
 
@@ -6,13 +7,10 @@
 *.tar
 *.log
 
+# Python compiled files
 __pycache__
+# Jupyter Notebook
 .ipynb_checkpoints
-kubeconfig
-configmap-simon.yaml
 
-data
-logs
-experiments
-example/snapshot
-config/cluster-config/
+# binary
+bin/*
