@@ -15,27 +15,27 @@ import (
 	"github.com/hkust-adsl/kubernetes-scheduler-simulator/pkg/utils"
 )
 
-type GpuShareFragExtendScorePlugin struct {
+type FGDScorePlugin struct {
 	handle      framework.Handle
 	typicalPods *simontype.TargetPodList
 }
 
-var _ framework.ScorePlugin = &GpuShareFragExtendScorePlugin{}
+var _ framework.ScorePlugin = &FGDScorePlugin{}
 
-func NewGpuShareFragExtendScorePlugin(_ runtime.Object, handle framework.Handle, typicalPods *simontype.TargetPodList) (framework.Plugin, error) {
-	plugin := &GpuShareFragExtendScorePlugin{
+func NewFGDScorePlugin(_ runtime.Object, handle framework.Handle, typicalPods *simontype.TargetPodList) (framework.Plugin, error) {
+	plugin := &FGDScorePlugin{
 		handle:      handle,
 		typicalPods: typicalPods,
 	}
-	allocateGpuIdFunc[plugin.Name()] = allocateGpuIdBasedOnGpuShareFragExtendScore
+	allocateGpuIdFunc[plugin.Name()] = allocateGpuIdBasedOnFGDScore
 	return plugin, nil
 }
 
-func (plugin *GpuShareFragExtendScorePlugin) Name() string {
-	return simontype.GpuShareFragExtendScorePluginName
+func (plugin *FGDScorePlugin) Name() string {
+	return simontype.FGDScorePluginName
 }
 
-func (plugin *GpuShareFragExtendScorePlugin) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
+func (plugin *FGDScorePlugin) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
 	if podReq, _ := resourcehelper.PodRequestsAndLimits(p); len(podReq) == 0 {
 		return framework.MaxNodeScore, framework.NewStatus(framework.Success)
 	}
@@ -55,7 +55,7 @@ func (plugin *GpuShareFragExtendScorePlugin) Score(ctx context.Context, state *f
 	return score, framework.NewStatus(framework.Success)
 }
 
-func (plugin *GpuShareFragExtendScorePlugin) ScoreExtensions() framework.ScoreExtensions {
+func (plugin *FGDScorePlugin) ScoreExtensions() framework.ScoreExtensions {
 	return nil
 }
 
@@ -84,7 +84,7 @@ func calculateGpuShareFragExtendScore(nodeRes simontype.NodeResource, podRes sim
 	}
 }
 
-func allocateGpuIdBasedOnGpuShareFragExtendScore(nodeRes simontype.NodeResource, podRes simontype.PodResource, _ simontype.GpuPluginCfg, typicalPods *simontype.TargetPodList) (gpuId string) {
+func allocateGpuIdBasedOnFGDScore(nodeRes simontype.NodeResource, podRes simontype.PodResource, _ simontype.GpuPluginCfg, typicalPods *simontype.TargetPodList) (gpuId string) {
 	_, gpuId = calculateGpuShareFragExtendScore(nodeRes, podRes, typicalPods)
 	return gpuId
 }

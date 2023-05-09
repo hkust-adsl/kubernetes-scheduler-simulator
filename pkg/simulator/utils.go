@@ -230,34 +230,6 @@ func GetAndSetSchedulerConfig(schedulerConfig string) (*config.CompletedConfig, 
 	if kcfg.Profiles[0].Plugins == nil {
 		kcfg.Profiles[0].Plugins = &kubeschedulerconfig.Plugins{}
 	}
-	kcfg.Profiles[0].Plugins.PreFilter = &kubeschedulerconfig.PluginSet{
-		Enabled: []kubeschedulerconfig.Plugin{
-			{
-				Name: simontype.GpuShareFragSimScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragSimLinearNormScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragSimTuneScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragDotProductScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragBestFitScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragL2NormRatioScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragPackingScorePluginName,
-			},
-			{
-				Name: simontype.GpuFragSimScorePluginName,
-			},
-		},
-	}
 	kcfg.Profiles[0].Plugins.PreScore = &kubeschedulerconfig.PluginSet{
 		Enabled: []kubeschedulerconfig.Plugin{
 			{
@@ -271,61 +243,7 @@ func GetAndSetSchedulerConfig(schedulerConfig string) (*config.CompletedConfig, 
 				Name: simontype.SimonPluginName,
 			},
 			{
-				Name: simontype.GpuFragScorePluginName,
-			},
-			{
-				Name: simontype.GpuFragBellmanScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragLinearNormScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragSimScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragSimLinearNormScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragSimTuneScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragDotProductScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragBestFitScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragL2NormRatioScorePluginName,
-			},
-			{
-				Name: simontype.GpuShareFragPackingScorePluginName,
-			},
-			{
-				Name: simontype.GpuFragSimScorePluginName,
-			},
-			{
-				Name: simontype.GpuPackingScorePluginName,
-			},
-			{
-				Name: simontype.GpuPackingSimScorePluginName,
-			},
-			{
-				Name: simontype.CosineSimilarityPluginName,
-			},
-			{
-				Name: simontype.CosineSimPackingPluginName,
-			},
-			{
 				Name: simontype.BestFitScorePluginName,
-			},
-			{
-				Name: simontype.WorstFitScorePluginName,
-			},
-			{
-				Name: simontype.FirstFitScorePluginName,
 			},
 			{
 				Name: simontype.RandomScorePluginName,
@@ -334,10 +252,7 @@ func GetAndSetSchedulerConfig(schedulerConfig string) (*config.CompletedConfig, 
 				Name: simontype.DotProductScorePluginName,
 			},
 			{
-				Name: simontype.L2NormDiffScorePluginName,
-			},
-			{
-				Name: simontype.L2NormRatioScorePluginName,
+				Name: simontype.FGDScorePluginName,
 			},
 		},
 	}

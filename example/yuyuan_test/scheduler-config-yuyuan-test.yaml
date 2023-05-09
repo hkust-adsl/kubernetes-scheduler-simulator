@@ -6,44 +6,15 @@ profiles:
     plugins:
       filter:
         enabled:
-#          - name: Open-Local
           - name: Open-Gpu-Share
-      preFilter:
-        disabled:
-          - name: GpuShareFragSimScore
-          - name: GpuShareFragSimLinearNormScore
-          - name: GpuShareFragDotProductScore
-          - name: GpuShareFragBestFitScore
-          - name: GpuShareFragL2NormRatioScore
-          - name: GpuShareFragPackingScore
-          - name: GpuFragSimScore
-          - name: GpuShareFragExtendSimScore
-        enabled:
       score:
         disabled:
-          - name: GpuFragScore
-          - name: GpuFragBellmanScore
-          - name: GpuFragSimScore
-          - name: GpuShareFragScore
-          - name: GpuShareFragExtendScore
-          - name: GpuShareFragLinearNormScore
-          - name: GpuShareFragSimScore
-          - name: GpuShareFragSimLinearNormScore
-          - name: GpuShareFragDotProductScore
-          - name: GpuShareFragBestFitScore
-          - name: GpuShareFragL2NormRatioScore
-          - name: GpuShareFragPackingScore
-          - name: CosineSimilarityScore
-          - name: GpuPackingScore
-          - name: CosineSimPackingScore
-          - name: GpuPackingSimScore
-          - name: BestFitScore
-          - name: WorstFitScore
+          - name: RandomScore
           - name: DotProductScore
-          - name: L2NormDiffScore
-          - name: L2NormRatioScore
-          - name: GandivaScore
-          - name: SynergyScore
+          - name: GpuClusteringScore
+          - name: GpuPackingScore
+          - name: BestFitScore
+          - name: FGDScore
           - name: ImageLocality
           - name: NodeAffinity
           - name: PodTopologySpread
@@ -53,9 +24,7 @@ profiles:
           - name: NodeResourcesLeastAllocated
           - name: NodePreferAvoidPods
         enabled:
-#          - name: GpuShareFragExtendScore
-#          - name: CosineSimilarityScore
-          - name: GpuShareFragExtendSimScore
+          - name: FGDScore
             weight: 1000
       reserve:
         enabled:
@@ -63,18 +32,10 @@ profiles:
       bind:
         disabled:
           - name: DefaultBinder
-          - name: Open-Local
         enabled:
           - name: Simon
     pluginConfig:
-      #      - name: DotProductScore
-      #        args:
-      #          dimExtMethod: divide
-#      - name: CosineSimilarityScore
-#        args:
-#          dimExtMethod: merge
-#          normMethod: max
-      - name: GpuShareFragExtendSimScore
+      - name: FGDScore
         args:
           dimExtMethod: merge
           normMethod: max
@@ -82,6 +43,4 @@ profiles:
         args:
           dimExtMethod: merge
           normMethod: max
-          #          gpuSelMethod: GpuShareFragExtendScore
-          #          gpuSelMethod: best
-          gpuSelMethod: GpuShareFragExtendSimScore
+          gpuSelMethod: FGDScore

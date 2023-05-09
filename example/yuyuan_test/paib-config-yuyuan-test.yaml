@@ -15,14 +15,14 @@ spec:
 #      podSnapshotYamlFilePrefix: ""
 #      nodeSnapshotCSVFilePrefix: "example/yuyuan_test/node_snapshot"
     workloadInflationConfig:
-      ratio: 6
+      ratio: 100
       seed: 233
-    descheduleConfig:
-      ratio: 0.1
+#    descheduleConfig:
+#      ratio: 0.1
 #      policy: cosSim
 #      policy: fragOnePod
-      policy: fragMultiPod
-    newWorkloadConfig: "example/yuyuan_test/paib/yuyuan-test/cluster"
+#      policy: fragMultiPod
+#    newWorkloadConfig: "example/yuyuan_test/paib/yuyuan-test/cluster"
     typicalPodsConfig:
       isInvolvedCpuPods: true
       podPopularityThreshold: 95

@@ -13,23 +13,23 @@ import (
 	"github.com/hkust-adsl/kubernetes-scheduler-simulator/pkg/utils"
 )
 
-type GandivaScorePlugin struct {
+type GpuClusteringScorePlugin struct {
 	handle framework.Handle
 }
 
-var _ framework.ScorePlugin = &GandivaScorePlugin{}
+var _ framework.ScorePlugin = &GpuClusteringScorePlugin{}
 
-func NewGandivaScorePlugin(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-	return &GandivaScorePlugin{
+func NewGpuClusteringScorePlugin(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+	return &GpuClusteringScorePlugin{
 		handle: handle,
 	}, nil
 }
 
-func (plugin *GandivaScorePlugin) Name() string {
-	return simontype.GandivaScorePluginName
+func (plugin *GpuClusteringScorePlugin) Name() string {
+	return simontype.GpuClusteringScorePluginName
 }
 
-func (plugin *GandivaScorePlugin) Score(_ context.Context, _ *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
+func (plugin *GpuClusteringScorePlugin) Score(_ context.Context, _ *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
 	nodeResPtr, podResPtr := utils.GetNodeResourceAndPodResourceViaHandle(p, nodeName, plugin.handle)
 	if nodeResPtr == nil || podResPtr == nil {
 		return framework.MinNodeScore, framework.NewStatus(framework.Error, fmt.Sprintf("failed to get nodeRes or podRes"))
@@ -55,6 +55,6 @@ func (plugin *GandivaScorePlugin) Score(_ context.Context, _ *framework.CycleSta
 	}
 }
 
-func (plugin *GandivaScorePlugin) ScoreExtensions() framework.ScoreExtensions {
+func (plugin *GpuClusteringScorePlugin) ScoreExtensions() framework.ScoreExtensions {
 	return nil
 }

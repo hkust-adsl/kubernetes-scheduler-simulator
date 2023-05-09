@@ -139,17 +139,14 @@ func New(opts ...Option) (Interface, error) {
 		simontype.OpenGpuSharePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewGpuSharePlugin(configuration, handle, &sim.typicalPods)
 		},
-		simontype.GpuFragScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuFragScorePlugin(configuration, handle, &sim.typicalPods)
+		simontype.RandomScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+			return simonplugin.NewRandomScorePlugin(configuration, handle)
 		},
-		simontype.GpuFragBellmanScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuFragBellmanScorePlugin(configuration, handle, &sim.typicalPods, &sim.fragMemo)
+		simontype.DotProductScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+			return simonplugin.NewDotProductScorePlugin(configuration, handle)
 		},
-		simontype.GpuShareFragScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragExtendScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragExtendScorePlugin(configuration, handle, &sim.typicalPods)
+		simontype.GpuClusteringScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+			return simonplugin.NewGpuClusteringScorePlugin(configuration, handle)
 		},
 		simontype.GpuPackingScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewGpuPackingScorePlugin(configuration, handle)
@@ -157,14 +154,8 @@ func New(opts ...Option) (Interface, error) {
 		simontype.BestFitScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewBestFitScorePlugin(configuration, handle)
 		},
-		simontype.RandomScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewRandomScorePlugin(configuration, handle)
-		},
-		simontype.DotProductScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewDotProductScorePlugin(configuration, handle)
-		},
-		simontype.GandivaScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGandivaScorePlugin(configuration, handle)
+		simontype.FGDScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
+			return simonplugin.NewFGDScorePlugin(configuration, handle, &sim.typicalPods)
 		},
 	}
 	sim.scheduler, err = scheduler.New(
@@ -187,7 +178,7 @@ func New(opts ...Option) (Interface, error) {
 	return sim, nil
 }
 
-// RunCluster switch between real client and fake clients.
+// RunCluster with real client in a production cluster or fake client in a simulated cluster.
 func (sim *Simulator) RunCluster(cluster ResourceTypes) ([]simontype.UnscheduledPod, error) {
 	// start scheduler
 	sim.runScheduler()
