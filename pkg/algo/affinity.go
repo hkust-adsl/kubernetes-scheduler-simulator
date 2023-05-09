@@ -9,7 +9,7 @@ type AffinityQueue struct {
 	pods []*corev1.Pod
 }
 
-// NewGreedQueue return a AffinityQueue
+// NewAffinityQueue return a AffinityQueue
 func NewAffinityQueue(pods []*corev1.Pod) *AffinityQueue {
 	return &AffinityQueue{
 		pods: pods,

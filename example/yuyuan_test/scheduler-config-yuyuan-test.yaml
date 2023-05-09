@@ -1,0 +1,87 @@
+apiVersion: kubescheduler.config.k8s.io/v1beta1
+kind: KubeSchedulerConfiguration
+percentageOfNodesToScore: 100
+profiles:
+  - schedulerName: simon-scheduler
+    plugins:
+      filter:
+        enabled:
+#          - name: Open-Local
+          - name: Open-Gpu-Share
+      preFilter:
+        disabled:
+          - name: GpuShareFragSimScore
+          - name: GpuShareFragSimLinearNormScore
+          - name: GpuShareFragDotProductScore
+          - name: GpuShareFragBestFitScore
+          - name: GpuShareFragL2NormRatioScore
+          - name: GpuShareFragPackingScore
+          - name: GpuFragSimScore
+          - name: GpuShareFragExtendSimScore
+        enabled:
+      score:
+        disabled:
+          - name: GpuFragScore
+          - name: GpuFragBellmanScore
+          - name: GpuFragSimScore
+          - name: GpuShareFragScore
+          - name: GpuShareFragExtendScore
+          - name: GpuShareFragLinearNormScore
+          - name: GpuShareFragSimScore
+          - name: GpuShareFragSimLinearNormScore
+          - name: GpuShareFragDotProductScore
+          - name: GpuShareFragBestFitScore
+          - name: GpuShareFragL2NormRatioScore
+          - name: GpuShareFragPackingScore
+          - name: CosineSimilarityScore
+          - name: GpuPackingScore
+          - name: CosineSimPackingScore
+          - name: GpuPackingSimScore
+          - name: BestFitScore
+          - name: WorstFitScore
+          - name: DotProductScore
+          - name: L2NormDiffScore
+          - name: L2NormRatioScore
+          - name: GandivaScore
+          - name: SynergyScore
+          - name: ImageLocality
+          - name: NodeAffinity
+          - name: PodTopologySpread
+          - name: TaintToleration
+          - name: NodeResourcesBalancedAllocation
+          - name: InterPodAffinity
+          - name: NodeResourcesLeastAllocated
+          - name: NodePreferAvoidPods
+        enabled:
+#          - name: GpuShareFragExtendScore
+#          - name: CosineSimilarityScore
+          - name: GpuShareFragExtendSimScore
+            weight: 1000
+      reserve:
+        enabled:
+          - name: Open-Gpu-Share
+      bind:
+        disabled:
+          - name: DefaultBinder
+          - name: Open-Local
+        enabled:
+          - name: Simon
+    pluginConfig:
+      #      - name: DotProductScore
+      #        args:
+      #          dimExtMethod: divide
+#      - name: CosineSimilarityScore
+#        args:
+#          dimExtMethod: merge
+#          normMethod: max
+      - name: GpuShareFragExtendSimScore
+        args:
+          dimExtMethod: merge
+          normMethod: max
+      - name: Open-Gpu-Share
+        args:
+          dimExtMethod: merge
+          normMethod: max
+          #          gpuSelMethod: GpuShareFragExtendScore
+          #          gpuSelMethod: best
+          gpuSelMethod: GpuShareFragExtendSimScore

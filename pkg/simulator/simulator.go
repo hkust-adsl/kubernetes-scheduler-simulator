@@ -151,56 +151,11 @@ func New(opts ...Option) (Interface, error) {
 		simontype.GpuShareFragExtendScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewGpuShareFragExtendScorePlugin(configuration, handle, &sim.typicalPods)
 		},
-		simontype.GpuShareFragExtendSimScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragExtendSimScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragLinearNormScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragLinearNormScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragSimScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragSimScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragSimLinearNormScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragSimLinearNormScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragSimTuneScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragSimTuneScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragDotProductScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragDotProductScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragBestFitScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragBestFitScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragL2NormRatioScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragL2NormRatioScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuShareFragPackingScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuShareFragPackingScorePlugin(configuration, handle, &sim.typicalPods)
-		},
-		simontype.GpuFragSimScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuFragSimScorePlugin(configuration, handle, &sim.typicalPods)
-		},
 		simontype.GpuPackingScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewGpuPackingScorePlugin(configuration, handle)
 		},
-		simontype.GpuPackingSimScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewGpuPackingSimScorePlugin(configuration, handle)
-		},
-		simontype.CosineSimilarityPluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewCosineSimilarityPlugin(configuration, handle)
-		},
-		simontype.CosineSimPackingPluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewCosineSimPackingPlugin(configuration, handle)
-		},
 		simontype.BestFitScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewBestFitScorePlugin(configuration, handle)
-		},
-		simontype.WorstFitScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewWorstFitScorePlugin(configuration, handle)
-		},
-		simontype.FirstFitScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewFirstFitScorePlugin(configuration, handle)
 		},
 		simontype.RandomScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewRandomScorePlugin(configuration, handle)
@@ -208,17 +163,8 @@ func New(opts ...Option) (Interface, error) {
 		simontype.DotProductScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewDotProductScorePlugin(configuration, handle)
 		},
-		simontype.L2NormDiffScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewL2NormDiffScorePlugin(configuration, handle)
-		},
-		simontype.L2NormRatioScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewL2NormRatioScorePlugin(configuration, handle)
-		},
 		simontype.GandivaScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewGandivaScorePlugin(configuration, handle)
-		},
-		simontype.SynergyScorePluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
-			return simonplugin.NewSynergyScorePlugin(configuration, handle)
 		},
 	}
 	sim.scheduler, err = scheduler.New(
