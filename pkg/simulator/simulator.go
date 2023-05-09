@@ -87,21 +87,20 @@ var defaultSimulatorOptions = simulatorOptions{
 // New generates all components that will be needed to simulate scheduling and returns a complete simulator
 func New(opts ...Option) (Interface, error) {
 	var err error
-	// Step 0: configures a Simulator by opts
+	// configure a simulator by opts
 	options := defaultSimulatorOptions
 	for _, opt := range opts {
 		opt(&options)
 	}
 
-	// Step 2: get scheduler CompletedConfig and set the list of scheduler bind plugins to Simon.
+	// get scheduler config and set the list of scheduler bind plugins to the simulator
 	kubeSchedulerConfig, err := GetAndSetSchedulerConfig(options.schedulerConfig)
 	if err != nil {
 		return nil, err
 	}
-
 	displaySchedulerConfig(kubeSchedulerConfig)
 
-	// Step 3: create fake client
+	// create a real/fake client
 	var client externalclientset.Interface
 	if options.kubeconfig != "" {
 		varConfig, err := clientcmd.BuildConfigFromFlags("", options.kubeconfig)
@@ -115,9 +114,8 @@ func New(opts ...Option) (Interface, error) {
 	kubeSchedulerConfig.Client = client
 	sharedInformerFactory := informers.NewSharedInformerFactory(client, 0)
 
-	// Step 4: Create the simulator
+	// create a simulator
 	ctx, cancel := context.WithCancel(context.Background())
-
 	storagev1Informers := sharedInformerFactory.Storage().V1()
 	scInformer := storagev1Informers.StorageClasses().Informer()
 	sharedInformerFactory.Start(ctx.Done())
@@ -131,7 +129,7 @@ func New(opts ...Option) (Interface, error) {
 		customConfig:    options.customConfig,
 	}
 
-	// Step 6: create scheduler for fake cluster
+	// create a scheduler
 	bindRegistry := frameworkruntime.Registry{
 		simontype.SimonPluginName: func(configuration runtime.Object, handle framework.Handle) (framework.Plugin, error) {
 			return simonplugin.NewSimonPlugin(configuration, handle)
@@ -340,7 +338,7 @@ func (sim *Simulator) SchedulePods(pods []*corev1.Pod) []simontype.UnscheduledPo
 			}
 		}
 		sim.ClusterGpuFragReport()
-		sim.ReportFragBasedOnSkyline()
+		// sim.ReportFragBasedOnSkyline()
 	}
 	return failedPods
 }

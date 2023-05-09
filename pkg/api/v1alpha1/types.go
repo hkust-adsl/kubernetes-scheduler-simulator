@@ -42,7 +42,7 @@ type WorkloadInflationConfig struct {
 	Seed  int64   `json:"seed,omitempty"`
 }
 
-type WorkloadTuningConfig struct {
+type WorkloadTuningConfig struct { // prune or append pods to match the Ratio * (cluster_GPU_capacity)
 	Ratio float64 `json:"ratio,omitempty"` // <= 0 means no effects
 	Seed  int64   `json:"seed,omitempty"`
 }

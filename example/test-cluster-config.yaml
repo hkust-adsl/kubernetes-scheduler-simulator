@@ -1,0 +1,16 @@
+apiVersion: simon/v1alpha1
+kind: Config
+metadata:
+  name: simon-paib-config
+spec:
+  cluster:
+    customConfig: example/test-cluster
+  customConfig:
+    shufflePod: false
+    workloadTuningConfig:
+      ratio: 0.9
+      seed: 233
+    typicalPodsConfig:
+      isInvolvedCpuPods: true
+      podPopularityThreshold: 95
+      isConsideredGpuResWeight: false

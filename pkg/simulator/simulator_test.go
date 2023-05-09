@@ -5,12 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hkust-adsl/kubernetes-scheduler-simulator/pkg/api/v1alpha1"
 	log "github.com/sirupsen/logrus"
-
 	"github.com/stretchr/testify/assert"
 	"k8s.io/client-go/informers"
 	externalclientset "k8s.io/client-go/kubernetes"
+
+	"github.com/hkust-adsl/kubernetes-scheduler-simulator/pkg/api/v1alpha1"
 )
 
 func TestGenerateWorkloadInflationPods(t *testing.T) {

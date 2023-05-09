@@ -11,7 +11,7 @@ $ make linux_build
 ## QuickStart Example
 
 ```bash
-$ LOGLEVEL=DEBUG bin/simon apply --extended-resources "gpu" -s example/yuyuan_test/scheduler-config-yuyuan-test.yaml -f example/yuyuan_test/paib-config-yuyuan-test.yaml
+$  LOGLEVEL=DEBUG bin/simon apply --extended-resources "gpu" -s example/test-scheduler-config.yaml -f example/test-cluster-config.yaml
 ```
 
 ## Acknowledge
