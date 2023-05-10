@@ -1,7 +1,7 @@
 # 🚀 Kubernetes Scheduler Simulator
 
 The simulator evaluates different scheduling policies in GPU-sharing clusters.
-It includes the Fragmentation Gradient Descent (FGD) policy proposed in the ATC paper (Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent), along with other baseline policies. 
+It includes the Fragmentation Gradient Descent (FGD) policy proposed in the ATC paper ([Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent](https://www.usenix.org/conference/atc23/presentation/weng)), along with other baseline policies (e.g., Best-fit, Dot-product, GPU Packing, GPU Clustering, Random-fit). 
 
 ## 🚧 Environment Setup
 
@@ -32,7 +32,12 @@ $ bin/simon apply --extended-resources "gpu" \
 
 ## 🔮 Experiments on Production Traces
 
-Please refer to [README](data/README.md) under the `data` directory to prepare production traces, and then refer to [README](experiments/README.md) under the `experiments` directory to reproduce the results reported in the paper.
+```bash
+pip install -r requirements.txt
+```
+
+1. Please refer to [README](data/README.md) under the `data` directory to prepare production traces
+2. Then refer to [README](experiments/README.md) under the `experiments` directory to reproduce the results reported in the paper.
 
 ## 📝 Paper
 

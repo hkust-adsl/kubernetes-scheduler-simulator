@@ -5,3 +5,5 @@ pytz==2023.3
 PyYAML==6.0
 six==1.16.0
 tzdata==2023.3
+seaborn==0.12.2
+matplotlib==3.7.1
