@@ -93,20 +93,14 @@ def generate_run_scripts(asyncc=True, parallel=PARALLEL):
         print('#!/usr/bin/bash\n# screen -dmS sim-%s bash -c "bash run_scripts_%s.sh"\n' % (DateAndRemark, Date[-4:]))
     else:
         print('#!/usr/bin/bash\n# cat run_scripts_%s.sh | while read i; do printf "%%q\\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD\n' % (Date[-4:]))
-    for id, policy, gsm, dem, nm in MethodList:  # GpuSelMethod, DimExtMethod, NormMethod
-        gsm = policy if gsm == "<self>" else gsm
-        for file in FileList:
-            # cluster = file.split('data/cluster_')[1].split('-')[0]
-            filename = file.split('/')[-1]
-            dir_name = get_dir_name_from_method([id, policy, gsm, dem, nm])
-            # for tune_ratio in [0.95]: # openb_0820
-            # for tune_ratio in [0.8, 0.82, 0.85]: # mvap_mvap
-            # for tune_ratio in [0.5, 0.6]: # random snapshot
-            for tune_ratio in [1.3]:
-                # for tune_seed in [42]:
-                tune_seed_end = 42 + NUM_REPEAT if NUM_REPEAT >= 1 else 43
-                for tune_seed in range(42, tune_seed_end, 1):
-                # for tune_seed in range(42, 45, 1):
+    for tune_ratio in [1.3]:
+        tune_seed_end = 42 + NUM_REPEAT if NUM_REPEAT >= 1 else 43
+        for tune_seed in range(42, tune_seed_end, 1):
+            for file in FileList:
+                filename = file.split('/')[-1]
+                for id, policy, gsm, dem, nm in MethodList:  # GpuSelMethod, DimExtMethod, NormMethod
+                    dir_name = get_dir_name_from_method([id, policy, gsm, dem, nm])
+                    gsm = policy if gsm == "<self>" else gsm
                     OUTPUT_YAML = False
                     SHUFFLE_POD = True
                     outstr = "# %s, %s, %s, %s, %s @ %s\n" % (id, policy, gsm, dem, nm, filename)

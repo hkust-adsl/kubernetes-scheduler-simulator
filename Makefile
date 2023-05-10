@@ -27,6 +27,6 @@ linux_build:
 	rm -f $(OUTPUT_DIR)/$(BINARY_NAME)
 	ln -s $(OUTPUT_DIR)/$(LINUX_BINARY_NAME) $(OUTPUT_DIR)/$(BINARY_NAME)
 
-.PHONY: clean_build
-clean_build:
+.PHONY: clean
+clean:
 	rm -f $(OUTPUT_DIR)/*

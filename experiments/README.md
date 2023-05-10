@@ -1,5 +1,9 @@
 ## Experiment Steps
 
+### Prerequisite: Compiled Binary Files in the `bin` Directory.
+
+Make sure the binary file `simon` has been generated in the `bin` directory (see "🚧 Environment Setup" in [README](../README.md) for details)
+
 ### Generate Run Scripts
 
 ```bash
@@ -20,12 +24,17 @@ cd ..
 cat experiments/run_scripts/run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
 # "--max-procs=16" where 16 is the degree of PARALLEL suggested above
 # bash run_scripts_0511.sh will run experiments sequentially
+
+ ..|''||   '|.   '|' '||''''|     '||    ||'  ..|''||   '|.   '|' |''||''| '||'  '||'    '||'          |     |''||''| '||''''|  '||''|.   
+.|'    ||   |'|   |   ||  .        |||  |||  .|'    ||   |'|   |     ||     ||    ||      ||          |||       ||     ||  .     ||   ||  
+||      ||  | '|. |   ||''|        |'|..'||  ||      ||  | '|. |     ||     ||''''||      ||         |  ||      ||     ||''|     ||''|'   
+'|.     ||  |   |||   ||           | '|' ||  '|.     ||  |   |||     ||     ||    ||      ||        .''''|.     ||     ||        ||   |.  
+ ''|...|'  .|.   '|  .||.....|    .|. | .||.  ''|...|'  .|.   '|    .||.   .||.  .||.    .||.....| .|.  .||.   .||.   .||.....| .||.  '|'
 ```
 
-~~1 month later ...~~
-
+Roughly, it takes around
 - 10 minutes for 1 experiment on 2 vCPU.
-- Roughly 10 hours for 1020 experiments on a 256 vCPU machine with PARALLEL=128.
+- 10 hours for 1020 experiments on a 256 vCPU machine with pool size of 128 threads.
 
 ### Merge
 
