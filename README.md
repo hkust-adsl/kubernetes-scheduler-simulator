@@ -35,7 +35,7 @@ $ bin/simon apply --extended-resources "gpu" \
 Install the required Python dependency environment.
 
 ```bash
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 1. Please refer to [README](data/README.md) under the `data` directory to prepare production traces.
