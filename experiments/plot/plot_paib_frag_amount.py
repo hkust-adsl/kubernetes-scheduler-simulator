@@ -9,12 +9,13 @@ from pathlib import Path
 from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-workload = 'openb_pod_list_default'
 TYPE='frag_amount'
 PAPER_PLOT=True # False: Plot with thinner lines for DingTalk or Doc usages
 SAVEFIG=False    # False: plt.show()
 TUNE_RATIO = 1.3
 FIGNAME = "paib_%s.pdf"
+
+workload = 'openb_pod_list_default'
 
 matplotlib.rcdefaults()
 matplotlib.rcParams['pdf.fonttype'] = 42

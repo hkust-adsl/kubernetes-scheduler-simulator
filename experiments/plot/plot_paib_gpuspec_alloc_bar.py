@@ -11,9 +11,16 @@ from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
 PAPER_PLOT=False # False: Plot with thinner lines for DingTalk or Doc usages
-SAVEFIG=False    # False: plt.show()
+SAVEFIG=True     # False: plt.show()
 TUNE_RATIO = 1.3
 FIGNAME = "paib_gpuspec_alloc_bar.pdf"
+
+# openb, heterogeneous GPU types
+workloads = ['openb_pod_list_gpuspec10',
+             'openb_pod_list_gpuspec20',
+             'openb_pod_list_gpuspec25',
+             'openb_pod_list_gpuspec33',
+]
 
 matplotlib.rcdefaults()
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -79,17 +86,6 @@ for type, file in FILEDICT.items():
 # openb, non-GPU workloads
 # workload = 'cluster_openb-pod_openb-0820_nocpu_gpu_nospec'
 
-# openb, heterogeneous GPU types
-workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_05'
-workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_10'
-workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_20'
-workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_25'
-workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec'
-workloads = ['cluster_openb-pod_openb-0820_gpu_gpuspec_05',                 
-            'cluster_openb-pod_openb-0820_gpu_gpuspec_10',
-            'cluster_openb-pod_openb-0820_gpu_gpuspec_20',
-            'cluster_openb-pod_openb-0820_gpu_gpuspec_25',
-            'cluster_openb-pod_openb-0820_gpu_gpuspec']
 
 # mvap, GPU-sharing workloads
 # workload = 'cluster_mvap-pod_mvap-0820_nomem_no_time-cap_1.0'
@@ -105,11 +101,10 @@ yhead = 30
 dfnpp = dfnp[dfnp.workload.isin(workloads)][dfnp.arrive_rate==100].copy()
 dfnpp.workload = dfnpp.workload.apply(lambda x: 
 {
-    'cluster_openb-pod_openb-0820_gpu_gpuspec_05': '5%',
-    'cluster_openb-pod_openb-0820_gpu_gpuspec_10': '10%',
-    'cluster_openb-pod_openb-0820_gpu_gpuspec_20': '20%',
-    'cluster_openb-pod_openb-0820_gpu_gpuspec_25': '25%',
-    'cluster_openb-pod_openb-0820_gpu_gpuspec': '33%',
+    'openb_pod_list_gpuspec10': '10%',
+    'openb_pod_list_gpuspec20': '20%',
+    'openb_pod_list_gpuspec25': '25%',
+    'openb_pod_list_gpuspec33': '33%',
 }.get(x, x))
 dfnpp = dfnpp[dfnpp.sc_policy.isin(policy_keep)]
 plt.figure(figsize=(10, 3), dpi=120)

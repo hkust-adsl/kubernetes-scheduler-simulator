@@ -1,14 +1,15 @@
+import os
 import pandas as pd
 from pathlib import Path
-from utils import get_total_num_gpu
 
 DATADIR="data"
 IN_FILE="analysis_fail.out"
 RESULTDIR="analysis_results"
 OUT_CSV="analysis_fail.csv"
-root = Path(__file__).parents[1] # 0524
+filepath = os.path.abspath(__file__)
+root = Path(filepath).parents[1] # 0524
 data = root / DATADIR
-analysis = Path(__file__).parent # 0830
+analysis = Path(filepath).parent # 0830
 resultDir = analysis / RESULTDIR
 # .
 # ├── README.md
@@ -25,6 +26,8 @@ resultDir = analysis / RESULTDIR
 # │   │   │   ├── [d] 0.6
 # │   │   │   │   ├── [d] 42
 # ......
+def get_total_num_gpu(workload):
+    return 6212
 
 def parse_fail_out_file_to_df(ifile):
     with open(ifile, 'r') as f:

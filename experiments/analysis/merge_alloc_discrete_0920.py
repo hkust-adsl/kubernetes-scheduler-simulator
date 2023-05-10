@@ -1,11 +1,15 @@
+import os
 import pandas as pd
 from pathlib import Path
-from utils import move_tag_to_new_column
+
 RESULTDIR="analysis_results"
 DATADIR="data"
-root = Path(__file__).parents[1] # 0524
+RESULTDIR="analysis_results"
+DATADIR="data"
+filepath = os.path.abspath(__file__)
+root = Path(filepath).parents[1] # 0524
 data = root / DATADIR
-analysis = Path(__file__).parent # 0830
+analysis = Path(filepath).parent # 0830
 resultDir = analysis / RESULTDIR
 # .
 # ├── README.md
@@ -22,6 +26,47 @@ resultDir = analysis / RESULTDIR
 # │   │   │   ├── [d] 0.6
 # │   │   │   │   ├── [d] 42
 # ......
+
+TAG_SNAKE_LIST = ['init_schedule', 'post_eviction', 'post_deschedule', 'schedule_inflation', 'deschedule_inflation']
+def move_tag_to_new_column(df, tag_list=TAG_SNAKE_LIST):
+    meta_col = []
+    data_col = []
+    for col in df.columns:
+        is_data_col = False
+        for tag in tag_list:
+            if col.endswith("_" + tag):
+                data_col.append(col)
+                is_data_col = True
+                break
+        if is_data_col == False:
+            meta_col.append(col)
+    
+    out_row_list = []
+    for _, row in df.iterrows():
+        orig_dict = dict(row)
+        meta_dict = {}
+        for col in meta_col:
+        # for col in NONTAG_COL:
+            if col in orig_dict:
+                meta_dict[col] = orig_dict[col]
+        # print("meta_dict:", meta_dict)
+
+        for tag in tag_list:
+            data_dict = {}
+            data_dict.update(meta_dict)
+            data_dict['tag'] = tag
+            found = 0
+            for col in data_col:
+                if col.endswith("_" + tag):
+                    key = col[:-(len(tag)+1)]
+                    # print(tag, '+', key,'=',col)
+                    data_dict[key] = orig_dict.get(col)
+                    found = 1
+            if found == 1:
+                # print("data_dict:", data_dict)
+                data_row = pd.DataFrame().from_dict(data_dict, orient='index').T
+                out_row_list.append(data_row)
+    return pd.concat(out_row_list)
 
 def exit_and_save_to_csv(dflist):
     dfo = pd.concat(dflist)

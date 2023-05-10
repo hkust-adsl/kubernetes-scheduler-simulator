@@ -13,10 +13,18 @@ from pathlib import Path
 from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-SAVEFIG=False    # False: plt.show()
 PAPER_PLOT=False # False: Plot with thinner lines for DingTalk or Doc usages
+SAVEFIG=True     # False: plt.show()
 TUNE_RATIO = 1.3
 FIGNAME = "paib_gpushare_alloc_bar.pdf"
+
+# openb, GPU-sharing workloads
+workloads = ['openb_pod_list_gpushare20',
+             'openb_pod_list_gpushare40',
+             'openb_pod_list_gpushare60',
+             'openb_pod_list_gpushare80',
+             'openb_pod_list_gpushare100',
+]
 
 matplotlib.rcdefaults()
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -65,13 +73,6 @@ for type, file in FILEDICT.items():
     dfnp.sc_policy = dfnp.sc_policy.apply(lambda x: POLICY_ABBR_DICT.get(x, x))
     dfp_dict[type] = dfnp
 
-# openb, GPU-sharing workloads
-workloads = ['cluster_openb-pod_openb-0820_share20_gpu_nospec',
-            'cluster_openb-pod_openb-0820_share40_gpu_nospec',
-            'cluster_openb-pod_openb-0820_share60_gpu_nospec',
-            'cluster_openb-pod_openb-0820_share80_gpu_nospec',
-            'cluster_openb-pod_openb-0820_share100_gpu_nospec']
-
 
 # policy_keep = ['FGD', 'Packing', 'Clustering', 'DotProd', 'BestFit', 'Random']
 policy_keep = ['FGD', 'BestFit', 'Packing', 'Clustering', 'DotProd', 'Random']
@@ -83,7 +84,7 @@ dfnp = dfp_dict['alloc']
 
 yhead = 30
 dfnpp = dfnp[dfnp.workload.isin(workloads)][dfnp.arrive_rate==100].copy()
-print(dfnpp[dfnpp.workload == workloads[4]].groupby(by='sc_policy').mean())
+# print(dfnpp[dfnpp.workload == workloads[4]].groupby(by='sc_policy').mean())
 # print(dfnpp['sc_policy', ])
 # dfnpp.workload = dfnpp.workload.apply(lambda x: 
 # {
@@ -96,11 +97,11 @@ print(dfnpp[dfnpp.workload == workloads[4]].groupby(by='sc_policy').mean())
 # }.get(x, x))
 dfnpp.workload = dfnpp.workload.apply(lambda x:
 {
-    'cluster_openb-pod_openb-0820_share20_gpu_nospec': '20%',
-    'cluster_openb-pod_openb-0820_share40_gpu_nospec': '40%',
-    'cluster_openb-pod_openb-0820_share60_gpu_nospec': '60%',
-    'cluster_openb-pod_openb-0820_share80_gpu_nospec': '80%',
-    'cluster_openb-pod_openb-0820_share100_gpu_nospec': '100%',
+    'openb_pod_list_gpushare20': '20%',
+    'openb_pod_list_gpushare40': '40%',
+    'openb_pod_list_gpushare60': '60%',
+    'openb_pod_list_gpushare80': '80%',
+    'openb_pod_list_gpushare100': '100%',
 }.get(x, x))
 dfnpp = dfnpp[dfnpp.sc_policy.isin(policy_keep)]
 plt.figure(figsize=(10, 3), dpi=120)

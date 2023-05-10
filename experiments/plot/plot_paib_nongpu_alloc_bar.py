@@ -11,9 +11,16 @@ from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
 PAPER_PLOT=False # False: Plot with thinner lines for DingTalk or Doc usages
-SAVEFIG=True    # False: plt.show()
+SAVEFIG=True     # False: plt.show()
 TUNE_RATIO = 1.3
 FIGNAME = "paib_nongpu_alloc_bar.pdf"
+
+# openb, non-GPU workloads
+workloads = ['openb_pod_list_cpu050',
+             'openb_pod_list_cpu100',
+             'openb_pod_list_cpu200',
+             'openb_pod_list_cpu250',
+]
 
 matplotlib.rcdefaults()
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -76,15 +83,6 @@ for type, file in FILEDICT.items():
 # workload = 'cluster_openb-pod_openb-0820_a50aoc_gpu_nospec'
 # workloads = ['cluster_openb-pod_openb-0820_a20aoc_gpu_nospec','cluster_openb-pod_openb-0820_a30aoc_gpu_nospec','cluster_openb-pod_openb-0820_a40aoc_gpu_nospec','cluster_openb-pod_openb-0820_a50aoc_gpu_nospec']
 
-# openb, non-GPU workloads
-workloads = ['cluster_openb-pod_openb-0820_cpu037_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu050_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu072_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu100_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu200_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu235_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu250_gpu_nospec',
-            'cluster_openb-pod_openb-0820_cpu300_gpu_nospec',]
 
 # openb, heterogeneous GPU types
 # workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_05'
@@ -109,14 +107,10 @@ yhead = 30
 dfnpp = dfnp[dfnp.workload.isin(workloads)][dfnp.arrive_rate==100].copy()
 dfnpp.workload = dfnpp.workload.apply(lambda x: 
 {
-    'cluster_openb-pod_openb-0820_cpu037_gpu_nospec': '3.7%',
-    'cluster_openb-pod_openb-0820_cpu050_gpu_nospec': '5%',
-    'cluster_openb-pod_openb-0820_cpu072_gpu_nospec': '7.2%',
-    'cluster_openb-pod_openb-0820_cpu100_gpu_nospec': '10%',
-    'cluster_openb-pod_openb-0820_cpu200_gpu_nospec': '20%',
-    'cluster_openb-pod_openb-0820_cpu235_gpu_nospec': '23.5%',
-    'cluster_openb-pod_openb-0820_cpu250_gpu_nospec': '25%',
-    'cluster_openb-pod_openb-0820_cpu300_gpu_nospec': '30%',
+    'openb_pod_list_cpu050': '5%',
+    'openb_pod_list_cpu100': '10%',
+    'openb_pod_list_cpu200': '20%',
+    'openb_pod_list_cpu250': '25%',
 }.get(x, x))
 workload_keep = ['5%', '10%', '20%', '25%']
 dfnpp = dfnpp[dfnpp.sc_policy.isin(policy_keep)]

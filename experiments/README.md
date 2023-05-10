@@ -3,7 +3,7 @@
 ### Generate Run Scripts
 
 ```bash
-cd kubernetes-scheduler-simulator/experiments
+# pwd: kubernetes-scheduler-simulator/experiments
 python run_scripts/generate_run_scripts.py > run_scripts/run_scripts_0511.sh
 ```
 
@@ -33,15 +33,21 @@ cat experiments/run_scripts/run_scripts_0511.sh | while read i; do printf "%q\n"
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments
 ln -s 2023_0511 data # softlink it to data
+# pwd: kubernetes-scheduler-simulator/experiments/analysis
 cd analysis
-bash merge_bash.sh
+bash bash_merge.sh
+# The output was generated under "analysis_results"
+# The results of our large-scale experiments are cached in "expected_results" for comparison
 ```
 
 ### Plot
 
 ```bash
+# pwd: kubernetes-scheduler-simulator/experiments/analysis
+cd ..
 # pwd: kubernetes-scheduler-simulator/experiments
-ln -s analysis/analysis_results/* plot/ # softlink all csv under analysis_results/ to plot/
+cp analysis/analysis_results/* plot/ # copy all csv under analysis_results/ to plot/ for analysis
+# cp analysis/expected_results/* plot/ # if skipping the experiments and directly reuse our expected results for plotting
 cd plot
 python plot_paib_alloc.py              # Fig. 9(a)
 python plot_paib_frag_amount.py        # Fig. 7(a)
