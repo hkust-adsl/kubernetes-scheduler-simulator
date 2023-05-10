@@ -14,8 +14,11 @@ Script parameters:
 
 ### Execute
 ```bash
-PARALLEL=16 # for example
-cat run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=${PARALLEL} -I CMD bash -c CMD
+# pwd: kubernetes-scheduler-simulator/experiments
+cd ..
+# pwd: kubernetes-scheduler-simulator
+cat run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
+# "--max-procs=16" where 16 is the degree of PARALLEL suggested above
 # bash run_scripts_0511.sh will run experiments sequentially
 ```
 
