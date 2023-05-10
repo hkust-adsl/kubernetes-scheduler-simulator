@@ -7,13 +7,11 @@
 python run_scripts/generate_run_scripts.py > run_scripts/run_scripts_0511.sh
 ```
 
-Script parameters:
-- Date:
-- FileList:
-- PARALLEL: num vCPU / 2 (suggested)
-- NUM_REPEAT: repetited experiments (10 in paper)
-
 ### Execute
+
+`run_scripts_0511.sh` includes multiple executable commands that are executed sequentially by default.
+You can adjust the `--max-procs` parameter in the following command to modify the number of parallel threads based on the CPU resources available on your machine.
+It is recommended to configure the parallel thread pool size to **half the number of virtual CPUs available** (i.e., `# of vCPU / 2`).
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments
@@ -25,8 +23,9 @@ cat experiments/run_scripts/run_scripts_0511.sh | while read i; do printf "%q\n"
 ```
 
 ~~1 month later ...~~
-- 1 hour for 1 experiment on 2 vCPU.
-- 16 hours for 1020 experiments on a 256 vCPU machine with PARALLEL=128.
+
+- 10 minutes for 1 experiment on 2 vCPU.
+- Roughly 10 hours for 1020 experiments on a 256 vCPU machine with PARALLEL=128.
 
 ### Merge
 
@@ -41,6 +40,9 @@ bash bash_merge.sh
 ```
 
 ### Plot
+
+Automatically generate figures in the paper based on the analysis results and compare them with the results in the [expected_results](plot/expected_results) directory.
+For example, running `python plot_paib_alloc.py` will generate `paib_alloc.pdf` figure, which corresponds to Fig. 9(a) in the paper.
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments/analysis

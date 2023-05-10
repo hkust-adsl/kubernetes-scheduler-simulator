@@ -36,7 +36,7 @@ $ bin/simon apply --extended-resources "gpu" \
 pip install -r requirements.txt
 ```
 
-1. Please refer to [README](data/README.md) under the `data` directory to prepare production traces
+1. Please refer to [README](data/README.md) under the `data` directory to prepare production traces.
 2. Then refer to [README](experiments/README.md) under the `experiments` directory to reproduce the results reported in the paper.
 
 ## 📝 Paper
