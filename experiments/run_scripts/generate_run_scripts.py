@@ -1,6 +1,6 @@
 #
 # 2023_0509
-# Usage: mkdir -p run_scripts_generated && python3 generate_run_scripts.py > run_scripts_generated/run_scripts_1015.sh
+# Usage: python3 generate_run_scripts.py > run_scripts.sh
 
 PARALLEL=128
 NUM_REPEAT=10
