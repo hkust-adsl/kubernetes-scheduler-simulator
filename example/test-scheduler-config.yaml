@@ -37,10 +37,10 @@ profiles:
     pluginConfig:
       - name: FGDScore
         args:
-          dimExtMethod: merge
+          dimExtMethod: share
           normMethod: max
       - name: Open-Gpu-Share
         args:
-          dimExtMethod: merge
+          dimExtMethod: share
           normMethod: max
           gpuSelMethod: FGDScore
