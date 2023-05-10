@@ -32,6 +32,8 @@ $ bin/simon apply --extended-resources "gpu" \
 
 ## 🔮 Experiments on Production Traces
 
+Install the required Python dependency environment.
+
 ```bash
 pip install -r requirements.txt
 ```
