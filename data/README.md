@@ -1,6 +1,17 @@
 # Traces as Inputs for Simulator
 
-## Usage
+## 🚧 Environment Setup
+
+Install the required Python dependency environment.
+
 ```bash
-bash prepare_input.sh
+$ pip install -r requirements.txt
+```
+
+## 🛠 Usage
+
+Generate the YAML files needed for the simulation experiment based on the original CSV files.
+
+```bash
+$ bash prepare_input.sh
 ```

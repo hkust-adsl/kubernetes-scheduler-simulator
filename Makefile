@@ -1,7 +1,17 @@
 OUTPUT_DIR=./bin
+
+GOARCH ?= $(shell go env GOARCH)
+GOOS ?= $(shell go env GOOS)
+
 BINARY_NAME=simon
 LINUX_BINARY_NAME=simon_linux
 DARWIN_BINARY_NAME=simon_darwin
+
+all: build
+
+.PHONY: build
+build:
+	GOARCH=$(GOARCH) GOOS=$(GOOS) go build -v -o $(OUTPUT_DIR)/$(BINARY_NAME) ./cmd
 
 .PHONY: darwin_build
 darwin_build:
