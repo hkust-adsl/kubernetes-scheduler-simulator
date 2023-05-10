@@ -17,12 +17,12 @@ Script parameters:
 # pwd: kubernetes-scheduler-simulator/experiments
 cd ..
 # pwd: kubernetes-scheduler-simulator
-cat run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
+cat experiments/run_scripts/run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
 # "--max-procs=16" where 16 is the degree of PARALLEL suggested above
 # bash run_scripts_0511.sh will run experiments sequentially
 ```
 
-~~1 month later...~~
+~~1 month later ...~~
 - 1 hour for 1 experiment on 2 vCPU.
 - 16 hours for 1020 experiments on a 256 vCPU machine with PARALLEL=128.
 
