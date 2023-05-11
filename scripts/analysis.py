@@ -4,28 +4,18 @@ import subprocess
 import pandas as pd
 from pathlib import Path
 
-
 ALLO_KEYS = ['MilliCpu','Memory','Gpu','MilliGpu']
 QUAD_KEYS = ["q1_lack_both", 'q2_lack_gpu', 'q3_satisfied', 'q4_lack_cpu', 'xl_satisfied', 'xr_lack_cpu', 'no_access', "frag_gpu_milli"]
-
-DESCHEDULE_POLICY_LIST = ["cosSim", "fragOnePod", "fragMultiPod"]
-DESCHEDULE_POLICY_DICT = {}
-for i, v in enumerate(DESCHEDULE_POLICY_LIST):
-    DESCHEDULE_POLICY_DICT[i+1] = v
-    DESCHEDULE_POLICY_DICT[str(i+1)] = v
 
 def camel_to_snake(name):
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
-
 
 TAG_LIST = ["InitSchedule", "PostEviction", "PostDeschedule", "ScheduleInflation", "DescheduleInflation"]
 TAG_SNAKE_LIST = [camel_to_snake(x) for x in TAG_LIST]
 HASTAG_COL = [camel_to_snake(x) for x in ALLO_KEYS]
 HASTAG_COL.extend([camel_to_snake(x) for x in [ y + "Amount" for y in ALLO_KEYS]])
 HASTAG_COL.extend(QUAD_KEYS)
-NONTAG_COL = ['data_date','inflation','deschedule_ratio','deschedule_policy','snapshot_sc','gpu_pack_score','gpu_frag_score','pack_x_frag','trial','unscheduled','origin_pods']
-NONTAG_COL.extend([camel_to_snake(x) for x in [y+"Total" for y in ALLO_KEYS]])
 
 def move_tag_to_new_column(df, tag_list=TAG_SNAKE_LIST):
     meta_col = []
@@ -47,7 +37,6 @@ def move_tag_to_new_column(df, tag_list=TAG_SNAKE_LIST):
         orig_dict = dict(row)
         meta_dict = {}
         for col in meta_col:
-        # for col in NONTAG_COL:
             if col in orig_dict:
                 meta_dict[col] = orig_dict[col]
         # print("meta_dict:", meta_dict)
@@ -274,7 +263,7 @@ def log_to_csv(log_path: Path, outfile: Path):
                             try:
                                 cdol_list_dict['event'][-1] = 'failed'
                                 cdol_list_dict['cum_pod'][-1] -= 1
-                                pod_name = cdol_meat[6][4:-3] # pod(paib-gpu/paib-pod-0008) -> paib-gpu/paib-pod-0008
+                                pod_name = cdol_meat[6][4:-3] # pod(openb-gpu/openb-pod-0008) -> openb-gpu/openb-pod-0008
                                 del cdol_pod_dict[pod_name]
                             except Exception as e:
                                 print("[ERROR] cdol: probably empty cdol_list_dict(%s) encounters [deletePod], error: %s" % (cdol_list_dict, e))
@@ -282,7 +271,7 @@ def log_to_csv(log_path: Path, outfile: Path):
                         else:
                             event_id = int(cdol_meat[0][1:-1]) # [8] -> 8
                             event = cdol_meat[3] # create/delete
-                            pod_name = cdol_meat[4][4:-3] # pod(paib-gpu/paib-pod-0008) -> paib-gpu/paib-pod-0008
+                            pod_name = cdol_meat[4][4:-3] # pod(openb-gpu/openb-pod-0008) -> openb-gpu/openb-pod-0008
                             cum_sum = cdol_list_dict['cum_pod'][-1]
 
                             if event == 'create':

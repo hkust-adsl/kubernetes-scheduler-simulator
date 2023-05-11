@@ -5,14 +5,14 @@ import argparse
 import subprocess
 from hashlib import md5
 from pathlib import Path
-""" Usage: paib 0 =fragshare_1000=> 2K pods
-EXPDIR="experiments/0705/seed233/01-fragshare" 
+""" Usage: openb 0 =FGD_1000=> 2K pods
+EXPDIR="experiments/2023_0511/openb_pod_list_default/06-FGD" 
 mkdir -p ${EXPDIR} && touch "${EXPDIR}/terminal.out"
-python3 scripts/h_generate_config_and_run.py -d "${EXPDIR}" \
+python3 scripts/generate_config_and_run.py -d "${EXPDIR}" \
 -seed 233 \
 -e -b \
--f data/cluster_paib-pod_paib_0318_gpu_3000 \
--fragshare 1000 \
+-f data/openb_pod_list_default \
+-FGD 1000 \
 -y "${EXPDIR}/snapshot/ds01" | tee -a "${EXPDIR}/terminal.out" \
 && \ 
 python3 scripts/analysis.py -f -g ${EXPDIR} | tee -a "${EXPDIR}/terminal.out"
@@ -58,7 +58,7 @@ def get_args():
     parser.add_argument('--pod-increase-step', type=int, default=1, help='pod increase step (default: 1)')
     parser.add_argument('--gpu-res-weight', type=float, default=0, help='GPU resource weight (default: 0)')
 
-    parser.add_argument('--cluster-name', type=str, default='simon-paib-config', help='name of the cluster config')
+    parser.add_argument('--cluster-name', type=str, default='simon-openb-config', help='name of the cluster config')
     parser.add_argument('-a', '--applist-path', type=str, default=None, help='path to the app list')
     parser.add_argument('--applist-name', type=str, default=None, help='name of the app list')
     parser.add_argument('--new-node', type=str, default="example/newnode/gpushare")
@@ -91,13 +91,13 @@ CLUSTER_CONFIG_TEMPLATE="""
 apiVersion: simon/v1alpha1
 kind: Config
 metadata:
-  name: simon-paib-config
+  name: simon-openb-config
 spec:
   appList:
   # - name: pai_gpu
   #   path: data/pai_b/application
   cluster:
-    customConfig: "data/cluster_paib-origin_workload"
+    customConfig: "data/cluster_openb-origin_workload"
   newNode: example/newnode/gpushare
   customConfig:
     shufflePod: false
@@ -115,7 +115,7 @@ spec:
       # policy: cosSim
       # policy: fragOnePod
       # policy: fragMultiPod
-    newWorkloadConfig: # "data/cluster_paib-new_workload"
+    newWorkloadConfig: # "data/cluster_openb-new_workload"
     typicalPodsConfig:
       isInvolvedCpuPods: true
       podPopularityThreshold: 95

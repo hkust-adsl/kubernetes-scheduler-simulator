@@ -60,16 +60,16 @@ if __name__ == '__main__':
         {
           "annotations":
             {
-              "alibabacloud.com/assume-time": "1652685498360787000",
-              "alibabacloud.com/creation-time": "2022-03-18T10:50:04+08:00",
+              "alibabacloud.com/assume-time": "1234567891011121314",
+              "alibabacloud.com/creation-time": "1970-01-01T10:50:04+08:00",
               "alibabacloud.com/gpu-count": "1",
               "alibabacloud.com/gpu-index": "1",
               "alibabacloud.com/gpu-milli": "1000",
             },
           "creationTimestamp": None,
-          "name": "paib-pod-0000",
-          "namespace": "paib-gpu",
-          "uid": "10d97990-4a98-4654-9cf0-fd26d9c7ca02",
+          "name": "openb-pod-0000",
+          "namespace": "openb-gpu",
+          "uid": "abcdefgh-ijkl-mnop-qrst-uvwxyz",
         },
       "spec":
         {
@@ -85,7 +85,7 @@ if __name__ == '__main__':
               },
             ],
           "dnsPolicy": "Default",
-          "nodeSelector": { "kubernetes.io/hostname": "paib-node-0461" },
+          "nodeSelector": { "kubernetes.io/hostname": "openb-node-0461" },
           "restartPolicy": "OnFailure",
           "schedulerName": "simon-scheduler",
         },
