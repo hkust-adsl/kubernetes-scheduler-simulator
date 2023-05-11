@@ -17,14 +17,15 @@ resultDir = analysis / RESULTDIR
 # │   │   ├── analysis_new.csv
 # │   │   └── analysis.csv
 # │   ├── [d] images
-# │   ├── merge_0913.py
-# │   ├── plot_0810_dotprod_extend.py
+# │   ├── merge.py
+# │   ├── plot.py
 # ├── [d] data
-# │   ├── [d] cluster_hhpai_na61-pod_hhpai_na61-0820_no_time
-# │   │   ├── [d] 01-FragShare
-# │   │   │   ├── [d] 0.6
+# │   ├── [d] openb_pod_list_default
+# │   │   ├── [d] 06-FGD
+# │   │   │   ├── [d] 1.3
 # │   │   │   │   ├── [d] 42
 # ......
+
 def get_total_num_gpu(workload):
     return 6212
 

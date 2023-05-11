@@ -1,2 +1,3 @@
 *.csv
 *.pdf
+!expected_results/*.pdf

@@ -1,25 +1,23 @@
 
 # %%
-# 1016
 import matplotlib
-from matplotlib import style
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
-from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-PAPER_PLOT=False # False: Plot with thinner lines for DingTalk or Doc usages
+PAPER_PLOT=False # False: Plot with thinner lines for Presentation
 SAVEFIG=True     # False: plt.show()
 TUNE_RATIO = 1.3
-FIGNAME = "paib_multigpu_alloc_bar.pdf"
+FIGNAME = "openb_gpushare_alloc_bar.pdf"
 
-# openb, multi-GPUs workloads
-workloads = ['openb_pod_list_multigpu20',
-             'openb_pod_list_multigpu30',
-             'openb_pod_list_multigpu40',
-             'openb_pod_list_multigpu50',
+# openb, GPU-sharing workloads
+workloads = ['openb_pod_list_gpushare20',
+             'openb_pod_list_gpushare40',
+             'openb_pod_list_gpushare60',
+             'openb_pod_list_gpushare80',
+             'openb_pod_list_gpushare100',
 ]
 
 matplotlib.rcdefaults()
@@ -47,10 +45,6 @@ for type, file in FILEDICT.items():
 
     dfn['workload'] = dfn.workload.apply(parse_workload_name)
 
-    workload_order = ['EightGpu80', 'EightGpu60', 'FourGpu80', 'FourGpu60', 'TwoGpu80', 'TwoGpu60', 'OneGpu80', 'OneGpu60', 'ShareGpu80', 'ShareGpu60', 'hhpai_0820','hhpai_0905','hhpai_mvap_0820', 'hhpai_mvap_0905', 'mit', 'mvap', 'paib']
-    workload_order_dict = dict(zip(workload_order, range(1, len(workload_order)+1)))
-    dfn.workload = dfn.workload.apply(lambda x: x if x not in workload_order_dict else "%02d-%s" % (workload_order_dict[x], x))
-
     # display(dfn)
     # print("SC_POLICY_LIST=[%s]" % (",".join("'%s'" % x for x in list(dfn.sc_policy.unique()))))
 
@@ -73,42 +67,26 @@ for type, file in FILEDICT.items():
     dfnp.sc_policy = dfnp.sc_policy.apply(lambda x: POLICY_ABBR_DICT.get(x, x))
     dfp_dict[type] = dfnp
 
-# openb, production workloads:
-# workload = 'cluster_openb-pod_openb-0820_gpu_nospec'
-
-# openb, non-GPU workloads
-# workload = 'cluster_openb-pod_openb-0820_nocpu_gpu_nospec'
-
-# openb, heterogeneous GPU types
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_05'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_10'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_20'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_25'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec'
-
-# mvap, GPU-sharing workloads
-# workload = 'cluster_mvap-pod_mvap-0820_nomem_no_time-cap_1.0'
-
-# policy_keep = ['FGD', 'Packing', 'Clustering', 'DotProd', 'BestFit', 'Random']
 policy_keep = ['FGD', 'BestFit', 'Packing', 'Clustering', 'DotProd', 'Random']
-# policy_keep = ['BestFit', 'FGD Coarse', 'FGD']
 
 # ['alloc', 'frag_amount', 'frag_ratio']
 dfnp = dfp_dict['alloc']
 
 yhead = 30
 dfnpp = dfnp[dfnp.workload.isin(workloads)][dfnp.arrive_rate==100].copy()
-# print(dfnpp[dfnpp.workload == workloads[3]].groupby(by='sc_policy').mean())
-dfnpp.workload = dfnpp.workload.apply(lambda x: 
+dfnpp.workload = dfnpp.workload.apply(lambda x:
 {
-    "openb_pod_list_multigpu20": '20%',
-    "openb_pod_list_multigpu30": '30%',
-    "openb_pod_list_multigpu40": '40%',
-    "openb_pod_list_multigpu50": '50%',
+    'openb_pod_list_gpushare20': '20%',
+    'openb_pod_list_gpushare40': '40%',
+    'openb_pod_list_gpushare60': '60%',
+    'openb_pod_list_gpushare80': '80%',
+    'openb_pod_list_gpushare100': '100%',
 }.get(x, x))
 dfnpp = dfnpp[dfnpp.sc_policy.isin(policy_keep)]
 plt.figure(figsize=(10, 3), dpi=120)
-bars = sns.barplot(data=dfnpp, x='workload', y='alloc_rate_reverse', hue='sc_policy', errorbar='sd', hue_order=policy_keep, edgecolor="0")
+bars = sns.barplot(data=dfnpp, x='workload', y='alloc_rate_reverse', 
+                hue='sc_policy', errorbar='sd', 
+                hue_order=policy_keep, order=['40%','60%','80%','100%'], edgecolor="0")
 hatches = [ "/" , "\\" , "|" , "-" , "+" , "x", "o", "O", ".", "*" ]
 num_policy = len(policy_keep)
 num_groups = len(bars.patches) // num_policy
@@ -116,28 +94,22 @@ for i, bar in enumerate(bars.patches):
     hatch_i = (i) // num_groups
     hatch_m = hatches[hatch_i % len(hatches)]
     bar.set_hatch(hatch_m)
+# for i, container in enumerate(bars.containers):
+#     bars.bar_label(container, label_type='edge', fmt='%0.1f%%', padding=5)
+bars.bar_label(bars.containers[0], label_type='edge', fmt='%0.1f%%', padding=5)
 
-# for i, container in enumerate(ax.containers):
-#     ax.bar_label(container, label_type='edge', fmt='%0.1f%%', padding=10)
-bars.bar_label(bars.containers[0], label_type='edge', fmt='%0.1f%%', padding=10)
-
-plt.xlabel('Percentage of GPUs occupied by multi-GPU workloads')
+plt.xlabel('Percentage of GPUs occupied by GPU-sharing workloads') # plt.xlabel('Arrived Workload (in Percentage of Cluster GPU Capacity)')
 plt.ylabel('Unallocated GPU (%)')
 
 plt.legend()
-# plt.xlabel('Arrived Workload (in Percentage of Cluster GPU Capacity)')
-# plt.ylabel('Unallocated GPU (%)')
-# plt.xlim(100-yhead, None)
 plt.ylim(0, 21.7)
 # plt.title("%s" % (workload))
-# plt.show()
 
 plt.grid(linestyle='-.', alpha=0.8, axis='y')
-# plt.legend(ncol=3, loc='upper right', bbox_to_anchor=(0.665, 1.03))
-plt.legend(ncol=3, loc='upper left')
-plt.xlabel('Proportion of multi-GPU workloads in terms of GPU requests')
+plt.legend(ncol=3, loc='lower center')
+plt.xlabel('Proportion of GPU-sharing workloads in terms of GPU requests')
 
-SAVEFIG=True
+SAVEFIG=True    # False: plt.show()
 if SAVEFIG:
     plt.savefig(FIGNAME, bbox_inches='tight')
 else:

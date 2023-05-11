@@ -1,18 +1,16 @@
 
 # %%
-# 1016
 import matplotlib
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
-from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-PAPER_PLOT=True # False: Plot with thinner lines for DingTalk or Doc usages
+PAPER_PLOT=True # False: Plot with thinner lines for Presentation
 SAVEFIG=True   # False: plt.show()
 TUNE_RATIO = 1.3
-FIGNAME = "paib_alloc.pdf"
+FIGNAME = "openb_alloc.pdf"
 
 workload = 'openb_pod_list_default'
 

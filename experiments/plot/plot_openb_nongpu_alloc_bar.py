@@ -1,29 +1,22 @@
 
 # %%
-# 1016
-from email import policy
-from ssl import ALERT_DESCRIPTION_HANDSHAKE_FAILURE
 import matplotlib
-from matplotlib import style
-from matplotlib import hatch
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
-from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-PAPER_PLOT=False # False: Plot with thinner lines for DingTalk or Doc usages
+PAPER_PLOT=False # False: Plot with thinner lines for Presentation
 SAVEFIG=True     # False: plt.show()
 TUNE_RATIO = 1.3
-FIGNAME = "paib_gpushare_alloc_bar.pdf"
+FIGNAME = "openb_nongpu_alloc_bar.pdf"
 
-# openb, GPU-sharing workloads
-workloads = ['openb_pod_list_gpushare20',
-             'openb_pod_list_gpushare40',
-             'openb_pod_list_gpushare60',
-             'openb_pod_list_gpushare80',
-             'openb_pod_list_gpushare100',
+# openb, non-GPU workloads
+workloads = ['openb_pod_list_cpu050',
+             'openb_pod_list_cpu100',
+             'openb_pod_list_cpu200',
+             'openb_pod_list_cpu250',
 ]
 
 matplotlib.rcdefaults()
@@ -73,41 +66,26 @@ for type, file in FILEDICT.items():
     dfnp.sc_policy = dfnp.sc_policy.apply(lambda x: POLICY_ABBR_DICT.get(x, x))
     dfp_dict[type] = dfnp
 
-
-# policy_keep = ['FGD', 'Packing', 'Clustering', 'DotProd', 'BestFit', 'Random']
 policy_keep = ['FGD', 'BestFit', 'Packing', 'Clustering', 'DotProd', 'Random']
-# policy_keep = ['BestFit', 'FGD Coarse', 'FGD']
-
 
 # ['alloc', 'frag_amount', 'frag_ratio']
 dfnp = dfp_dict['alloc']
 
 yhead = 30
 dfnpp = dfnp[dfnp.workload.isin(workloads)][dfnp.arrive_rate==100].copy()
-# print(dfnpp[dfnpp.workload == workloads[4]].groupby(by='sc_policy').mean())
-# print(dfnpp['sc_policy', ])
-# dfnpp.workload = dfnpp.workload.apply(lambda x: 
-# {
-#     'cluster_openb-pod_openb-0820_cpu037_gpu_nospec': 'CPU037',
-#     'cluster_openb-pod_openb-0820_cpu050_gpu_nospec': 'CPU050',
-#     'cluster_openb-pod_openb-0820_cpu072_gpu_nospec': 'CPU072',
-#     'cluster_openb-pod_openb-0820_cpu100_gpu_nospec': 'CPU100',
-#     'cluster_openb-pod_openb-0820_cpu200_gpu_nospec': 'CPU200',
-#     'cluster_openb-pod_openb-0820_cpu235_gpu_nospec': 'CPU235',
-# }.get(x, x))
-dfnpp.workload = dfnpp.workload.apply(lambda x:
+dfnpp.workload = dfnpp.workload.apply(lambda x: 
 {
-    'openb_pod_list_gpushare20': '20%',
-    'openb_pod_list_gpushare40': '40%',
-    'openb_pod_list_gpushare60': '60%',
-    'openb_pod_list_gpushare80': '80%',
-    'openb_pod_list_gpushare100': '100%',
+    'openb_pod_list_cpu050': '5%',
+    'openb_pod_list_cpu100': '10%',
+    'openb_pod_list_cpu200': '20%',
+    'openb_pod_list_cpu250': '25%',
 }.get(x, x))
+workload_keep = ['5%', '10%', '20%', '25%']
 dfnpp = dfnpp[dfnpp.sc_policy.isin(policy_keep)]
 plt.figure(figsize=(10, 3), dpi=120)
 bars = sns.barplot(data=dfnpp, x='workload', y='alloc_rate_reverse', 
-                hue='sc_policy', errorbar='sd', 
-                hue_order=policy_keep, order=['40%','60%','80%','100%'], edgecolor="0")
+                hue='sc_policy', errorbar='sd',
+                hue_order=policy_keep, order=workload_keep, edgecolor="0")
 hatches = [ "/" , "\\" , "|" , "-" , "+" , "x", "o", "O", ".", "*" ]
 num_policy = len(policy_keep)
 num_groups = len(bars.patches) // num_policy
@@ -115,24 +93,20 @@ for i, bar in enumerate(bars.patches):
     hatch_i = (i) // num_groups
     hatch_m = hatches[hatch_i % len(hatches)]
     bar.set_hatch(hatch_m)
-# for i, container in enumerate(bars.containers):
-#     bars.bar_label(container, label_type='edge', fmt='%0.1f%%', padding=5)
+# for i, container in enumerate(ax.containers):
+#     ax.bar_label(container, label_type='edge', fmt='%0.1f%%', padding=10)
 bars.bar_label(bars.containers[0], label_type='edge', fmt='%0.1f%%', padding=5)
 
-plt.xlabel('Percentage of GPUs occupied by GPU-sharing workloads')
+plt.xlabel('Percentage of non-GPU workloads') # plt.xlabel('Arrived Workload (in Percentage of Cluster GPU Capacity)')
 plt.ylabel('Unallocated GPU (%)')
 
 plt.legend()
-# plt.xlabel('Arrived Workload (in Percentage of Cluster GPU Capacity)')
-# plt.ylabel('Unallocated GPU (%)')
-# plt.xlim(100-yhead, None)
 plt.ylim(0, 21.7)
 # plt.title("%s" % (workload))
-# plt.show()
 
 plt.grid(linestyle='-.', alpha=0.8, axis='y')
-plt.legend(ncol=3, loc='lower center')
-plt.xlabel('Proportion of GPU-sharing workloads in terms of GPU requests')
+plt.legend(ncol=3, loc='upper left')
+plt.xlabel('Proportion of non-GPU workloads in terms of task number')
 
 SAVEFIG=True    # False: plt.show()
 if SAVEFIG:

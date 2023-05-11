@@ -1,19 +1,17 @@
 
 # %%
-# 1016
 import matplotlib
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
-from IPython.display import display
 from utils import parse_workload_name, POLICY_ABBR_DICT
 
-TYPE='frag_amount'
-PAPER_PLOT=True # False: Plot with thinner lines for DingTalk or Doc usages
+TYPE='frag_ratio'
+PAPER_PLOT=True # False: Plot with thinner lines for Presentation
 SAVEFIG=False    # False: plt.show()
 TUNE_RATIO = 1.3
-FIGNAME = "paib_%s.pdf"
+FIGNAME = "openb_%s.pdf"
 
 workload = 'openb_pod_list_default'
 
@@ -42,10 +40,6 @@ for type, file in FILEDICT.items():
 
     dfn['workload'] = dfn.workload.apply(parse_workload_name)
 
-    workload_order = ['EightGpu80', 'EightGpu60', 'FourGpu80', 'FourGpu60', 'TwoGpu80', 'TwoGpu60', 'OneGpu80', 'OneGpu60', 'ShareGpu80', 'ShareGpu60', 'hhpai_0820','hhpai_0905','hhpai_mvap_0820', 'hhpai_mvap_0905', 'mit', 'mvap', 'paib']
-    workload_order_dict = dict(zip(workload_order, range(1, len(workload_order)+1)))
-    dfn.workload = dfn.workload.apply(lambda x: x if x not in workload_order_dict else "%02d-%s" % (workload_order_dict[x], x))
-
     # display(dfn)
     # print("SC_POLICY_LIST=[%s]" % (",".join("'%s'" % x for x in list(dfn.sc_policy.unique()))))
 
@@ -68,33 +62,9 @@ for type, file in FILEDICT.items():
     dfnp.sc_policy = dfnp.sc_policy.apply(lambda x: POLICY_ABBR_DICT.get(x, x))
     dfp_dict[type] = dfnp
 
-# openb, production workloads:
-
-# openb, multi-GPUs workloads
-# workload = 'cluster_openb-pod_openb-0820_a20aoc_gpu_nospec'
-# workload = 'cluster_openb-pod_openb-0820_a30aoc_gpu_nospec'
-# workload = 'cluster_openb-pod_openb-0820_a40aoc_gpu_nospec'
-# workload = 'cluster_openb-pod_openb-0820_a50aoc_gpu_nospec'
-
-# openb, non-GPU workloads
-# workload = 'cluster_openb-pod_openb-0820_nocpu_gpu_nospec'
-
-# openb, heterogeneous GPU types
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_05'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_10'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_20'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec_25'
-# workload = 'cluster_openb-pod_openb-0820_gpu_gpuspec'
-
-# mvap, GPU-sharing workloads
-# workload = 'cluster_mvap-pod_mvap-0820_nomem_no_time-cap_1.0'
-
-# policy_keep = ['FGD', 'Clustering', 'Packing', 'DotProd', 'BestFit', 'Random']
 policy_keep = ['Random', 'DotProd', 'Clustering', 'Packing', 'BestFit', 'FGD']
 policy_keepr = ['FGD', 'BestFit', 'Packing', 'Clustering', 'DotProd', 'Random']
 
-# TYPE=list(FILEDICT.keys())[1]
-# TYPE='frag_ratio'
 # ['alloc', 'frag_amount', 'frag_ratio']
 dfnp = dfp_dict[TYPE]
 
