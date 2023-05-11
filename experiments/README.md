@@ -1,17 +1,17 @@
 ## Experiment Steps
 
-### Prerequisite: Compiled Binary Files in the `bin` Directory.
+### 0. Prerequisite: Compiled Binary Files in the `bin` Directory.
 
 Make sure the binary file `simon` has been generated in the `bin` directory (see "🚧 Environment Setup" in [README](../README.md) for details)
 
-### Run Scripts Generation
+### 1. Run Scripts Generation
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments
 $ python run_scripts/generate_run_scripts.py > run_scripts/run_scripts_0511.sh
 ```
 
-### Execute
+### 2. Execute
 
 `run_scripts_0511.sh` includes multiple executable commands that are executed sequentially by default.
 You can adjust the `--max-procs` parameter in the following command to modify the number of parallel threads based on the CPU resources available on your machine.
@@ -43,7 +43,9 @@ In fact, it takes around
 - 10 minutes for 1 experiment on 2 vCPU, 9.4MB disk space for logs.
 - 10 hours for 1020 experiments on a 256 vCPU machine with pool size of 128 threads, 9.4GB disk space for logs.
 
-### Analysis & Merge
+> Our generated script for 1020 experiments is cached in [run_scripts/expected_run_scripts_0511.sh](./run_scripts/expected_run_scripts_0511.sh) (3063 lines) for your reference.
+
+### 3. Analysis & Merge
 
 As each experiment has its own folder where the `analysis_*` files are produced, here we bypass all folders and merge all the analysis files of the same category into one file under the `analysis/analysis_results` folder.
 
@@ -58,9 +60,9 @@ $ cd analysis
 $ bash analysis_merge.sh
 ```
 
-Our results of the extensive 1020 experiments are cached in [analysis/expected_results](./analysis/expected_results/) (9.8MB) for your reference.
+> Our results of the extensive 1020 experiments are cached in [analysis/expected_results](./analysis/expected_results/) (9.8MB) for your reference.
 
-### Plot
+### 4. Plot
 
 To reproduce the figures shown in the paper, we provide the plotting scripts in the [plot](./plot/) folder. As the scripts assume the existence of the merged `analysis_*.csv` files, we need to first copy (or softlink) these files to [plot](./plot/) folder
 
@@ -89,4 +91,4 @@ $ python plot_openb_gpuspec_alloc_bar.py  # Fig. 13
 $ python plot_openb_nongpu_alloc_bar.py   # Fig. 14
 ```
 
-Our results shown in the paper are cached in [plot/expected_results](plot/expected_results) (164KB) for your reference.
+> Our results shown in the paper are cached in [plot/expected_results](plot/expected_results) (164KB) for your reference.
