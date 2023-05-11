@@ -62,3 +62,7 @@ Please cite our paper if it is helpful to your research.
 Our simulator is developed based on [open-simulator](https://github.com/alibaba/open-simulator) by Alibaba, a simulator used for cluster capacity planning. 
 This repository primarily evaluates the performance of different scheduling polices on production traces.
 GPU-related plugin has been merged into the main branch of [open-simulator](https://github.com/alibaba/open-simulator).
+
+## ⏳ TODO
+
+- [ ] Add a minikube running example to demonstrate how the simulator schedules pods in a **real** Kubernetes cluster.
