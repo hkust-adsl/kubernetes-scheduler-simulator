@@ -1,31 +1,29 @@
-#
-# 2023_0509
+# 
 # Usage: python3 generate_run_scripts.py > run_scripts.sh
 
-PARALLEL=128
-NUM_REPEAT=10
 
-Date = "2023_0511"
-Remark = "Artifacts"
-FileList = [
-    #: Fig.7, Fig.9
+DATE = "2023_0511" # Used as the folder name under experiments/ to hold all log results. To avoid collision of repeated experiments, may change date or append _v1, _v2, etc.
+REMARK = "Artifacts"
+REPEAT =10 # Number of repetitive experiments.
+FILELIST = [
+    #: Main results in Fig. 7 and 9
     "data/openb_pod_list_default",
-    #: Fig.
+    #: Fig. 14 Various proportion of non-GPU tasks
     "data/openb_pod_list_cpu050",
     "data/openb_pod_list_cpu100",
     "data/openb_pod_list_cpu200",
     "data/openb_pod_list_cpu250",
-    #:
+    #: Fig. 11 Various proportion of GPU-sharing tasks
     "data/openb_pod_list_gpushare100",
     "data/openb_pod_list_gpushare40",
     "data/openb_pod_list_gpushare60",
     "data/openb_pod_list_gpushare80",
-    #:
+    #: Fig. 13 Various proportion of tasks with GPU-type constraints
     "data/openb_pod_list_gpuspec10",
     "data/openb_pod_list_gpuspec20",
     "data/openb_pod_list_gpuspec25",
     "data/openb_pod_list_gpuspec33",
-    #:
+    #: Fig. 12 Various proportion of multi-GPU tasks
     "data/openb_pod_list_multigpu20",
     "data/openb_pod_list_multigpu30",
     "data/openb_pod_list_multigpu40",
@@ -86,17 +84,17 @@ def get_dir_name_from_policy_id_list(id_list):
 ###########################################################
 ###########################################################
 
-def generate_run_scripts(asyncc=True, parallel=PARALLEL):
-    DateAndRemark = Date + "-" + Remark.replace(' ', "_").replace('(',"_").replace(')',"_")
+def generate_run_scripts(asyncc=True, parallel=16):
+    DateAndRemark = DATE + "-" + REMARK.replace(' ', "_").replace('(',"_").replace(')',"_")
     numJobs=0
     if asyncc:
-        print('#!/usr/bin/bash\n# screen -dmS sim-%s bash -c "bash run_scripts_%s.sh"\n' % (DateAndRemark, Date[-4:]))
+        print('#!/bin/bash\n# screen -dmS sim-%s bash -c "bash run_scripts_%s.sh"\n' % (DateAndRemark, DATE[-4:]))
     else:
-        print('#!/usr/bin/bash\n# cat run_scripts_%s.sh | while read i; do printf "%%q\\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD\n' % (Date[-4:]))
+        print('#!/bin/bash\n# cat run_scripts_%s.sh | while read i; do printf "%%q\\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD\n' % (DATE[-4:]))
     for tune_ratio in [1.3]:
-        tune_seed_end = 42 + NUM_REPEAT if NUM_REPEAT >= 1 else 43
+        tune_seed_end = 42 + REPEAT if REPEAT >= 1 else 43
         for tune_seed in range(42, tune_seed_end, 1):
-            for file in FileList:
+            for file in FILELIST:
                 filename = file.split('/')[-1]
                 for id, policy, gsm, dem, nm in MethodList:  # GpuSelMethod, DimExtMethod, NormMethod
                     dir_name = get_dir_name_from_method([id, policy, gsm, dem, nm])
@@ -104,7 +102,7 @@ def generate_run_scripts(asyncc=True, parallel=PARALLEL):
                     OUTPUT_YAML = False
                     SHUFFLE_POD = True
                     outstr = "# %s, %s, %s, %s, %s @ %s\n" % (id, policy, gsm, dem, nm, filename)
-                    outstr += 'EXPDIR="experiments/%s/%s/%s/%s/%s' % (Date, filename, dir_name, tune_ratio, tune_seed)
+                    outstr += 'EXPDIR="experiments/%s/%s/%s/%s/%s' % (DATE, filename, dir_name, tune_ratio, tune_seed)
                     outstr += '" && mkdir -p ${EXPDIR} && touch "${EXPDIR}/terminal.out" && '
                     outstr += 'python3 scripts/generate_config_and_run.py -d "${EXPDIR}" '
                     outstr += '-e -b '
@@ -132,7 +130,8 @@ def generate_run_scripts(asyncc=True, parallel=PARALLEL):
         print("wait && date")
 
 if __name__=='__main__':
-    # generate_run_scripts()
+    # generate_run_scripts(asyncc=True)
+    #: $ bash run_scripts.txt
     generate_run_scripts(asyncc=False)
     #: $ cat run_scripts.txt | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
 

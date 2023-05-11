@@ -4,7 +4,7 @@
 
 Make sure the binary file `simon` has been generated in the `bin` directory (see "🚧 Environment Setup" in [README](../README.md) for details)
 
-### Generate Run Scripts
+### Run Scripts Generation
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments
@@ -25,46 +25,68 @@ $ cat experiments/run_scripts/run_scripts_0511.sh | while read i; do printf "%q\
 # "--max-procs=16" where 16 is the degree of PARALLEL suggested above
 # bash run_scripts_0511.sh will run experiments sequentially
 
-#  ..|''||   '|.   '|' '||''''|     '||    ||'  ..|''||   '|.   '|' |''||''| '||'  '||'    '||'          |     |''||''| '||''''|  '||''|.   
-# .|'    ||   |'|   |   ||  .        |||  |||  .|'    ||   |'|   |     ||     ||    ||      ||          |||       ||     ||  .     ||   ||  
-# ||      ||  | '|. |   ||''|        |'|..'||  ||      ||  | '|. |     ||     ||''''||      ||         |  ||      ||     ||''|     ||''|'   
-# '|.     ||  |   |||   ||           | '|' ||  '|.     ||  |   |||     ||     ||    ||      ||        .''''|.     ||     ||        ||   |.  
-#  ''|...|'  .|.   '|  .||.....|    .|. | .||.  ''|...|'  .|.   '|    .||.   .||.  .||.    .||.....| .|.  .||.   .||.   .||.....| .||.  '|'
+#  ..|''||   '|.   '|' '||''''|       '||    ||'  ..|''||   '|.   '|' |''||''| '||'  '||'      '||'          |     |''||''| '||''''|  '||''|.   
+# .|'    ||   |'|   |   ||  .          |||  |||  .|'    ||   |'|   |     ||     ||    ||        ||          |||       ||     ||  .     ||   ||  
+# ||      ||  | '|. |   ||''|          |'|..'||  ||      ||  | '|. |     ||     ||''''||        ||         |  ||      ||     ||''|     ||''|'   
+# '|.     ||  |   |||   ||             | '|' ||  '|.     ||  |   |||     ||     ||    ||        ||        .''''|.     ||     ||        ||   |.  
+#  ''|...|'  .|.   '|  .||.....|      .|. | .||.  ''|...|'  .|.   '|    .||.   .||.  .||.      .||.....| .|.  .||.   .||.   .||.....| .||.  '|'
 ```
 
-Roughly, it takes around
-- 10 minutes for 1 experiment on 2 vCPU.
-- 10 hours for 1020 experiments on a 256 vCPU machine with pool size of 128 threads.
+To explain the bash script generated (e.g., `run_scripts_0511.sh`)
+- Each experiment is conducted via [scripts/generate_config_and_run.py](../scripts/generate_config_and_run.py)
+    - Firstly, the script generates two configuration yaml files in that folder, which are served as input to `bin/simon apply` (i.e., cluster-config and scheduler-config, see "🔥 Quickstart Example" in repo [README](../README.md)), 
+    - Then, it execute the `bin/simon apply` command (confirmed by passing the `-e` parameter to the script)
+    - The `bin/simon`, written in Golang, will schedule the tasks and produce a scheduling log file in the corresponding folder.
+- Afterwards, [scripts/analysis.py](../scripts/analysis.py) is executed to parse logs and yields multiple `analysis_*` files in the folder
 
-### Merge
+In fact, it takes around
+- 10 minutes for 1 experiment on 2 vCPU, 9.4MB disk space for logs.
+- 10 hours for 1020 experiments on a 256 vCPU machine with pool size of 128 threads, 9.4GB disk space for logs.
+
+### Analysis & Merge
+
+As each experiment has its own folder where the `analysis_*` files are produced, here we bypass all folders and merge all the analysis files of the same category into one file under the `analysis/analysis_results` folder.
+
+The top folder of the experiment varies with DATE (e.g., `2023_0511`), while the `analysis_merge.sh` is hard-coded to bypass and merge folders under the `data` folder. Therefore, we need to softlink the top folder to be merged to `data` (e.g., `$ ln -s 2023_0511 data`) before executing `$ bash analysis_merge.sh`.
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments
 $ ln -s 2023_0511 data # softlink it to data
 # pwd: kubernetes-scheduler-simulator/experiments/analysis
 $ cd analysis
-$ bash bash_merge.sh
-# The output was generated under "analysis_results"
-# The results of our large-scale experiments are cached in "expected_results" for comparison
+# The output will be put under "analysis_results" folder
+$ bash analysis_merge.sh
 ```
+
+Our results of the extensive 1020 experiments are cached in [analysis/expected_results](./analysis/expected_results/) (9.8MB) for your reference.
 
 ### Plot
 
-Automatically generate figures in the paper based on the analysis results and compare them with the results in the [expected_results](plot/expected_results) directory.
-For example, running `python plot_paib_alloc.py` will generate `paib_alloc.pdf` figure, which corresponds to Fig. 9(a) in the paper.
+To reproduce the figures shown in the paper, we provide the plotting scripts in the [plot](./plot/) folder. As the scripts assume the existence of the merged `analysis_*.csv` files, we need to first copy (or softlink) these files to [plot](./plot/) folder
 
 ```bash
 # pwd: kubernetes-scheduler-simulator/experiments/analysis
 $ cd ..
 # pwd: kubernetes-scheduler-simulator/experiments
 $ cp analysis/analysis_results/* plot/ # copy all csv under analysis_results/ to plot/ for analysis
-# cp analysis/expected_results/* plot/ # if skipping the experiments and directly reuse our expected results for plotting
-$ cd plot
-$ python plot_paib_alloc.py              # Fig. 9(a)
-$ python plot_paib_frag_amount.py        # Fig. 7(a)
-$ python plot_paib_frag_ratio.py         # Fig. 7(b)
-$ python plot_paib_gpushare_alloc_bar.py # Fig. 11
-$ python plot_paib_multigpu_alloc_bar.py # Fig. 12
-$ python plot_paib_gpuspec_alloc_bar.py  # Fig. 13
-$ python plot_paib_nongpu_alloc_bar.py   # Fig. 14
 ```
+
+if you have skipped the extensive experiments and/or would like to use our expected analysis results for plotting, please replace the last command as:
+```bash
+$ cp analysis/expected_results/* plot/
+```
+
+As the final step, step into the [plot](./plot/) folder and generate figures (in pdf format) based on the analysis results. For example, running `python plot_openb_alloc.py` will produce `openb_alloc.pdf` in the current directory, which corresponds to Fig. 9(a) in the paper.
+
+```bash
+$ cd plot
+$ python plot_openb_alloc.py              # Fig. 9(a)
+$ python plot_openb_frag_amount.py        # Fig. 7(a)
+$ python plot_openb_frag_ratio.py         # Fig. 7(b)
+$ python plot_openb_gpushare_alloc_bar.py # Fig. 11
+$ python plot_openb_multigpu_alloc_bar.py # Fig. 12
+$ python plot_openb_gpuspec_alloc_bar.py  # Fig. 13
+$ python plot_openb_nongpu_alloc_bar.py   # Fig. 14
+```
+
+Our results shown in the paper are cached in [plot/expected_results](plot/expected_results) (164KB) for your reference.

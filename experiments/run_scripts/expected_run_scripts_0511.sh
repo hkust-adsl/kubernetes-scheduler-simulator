@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # cat run_scripts_0511.sh | while read i; do printf "%q\n" "$i"; done | xargs --max-procs=16 -I CMD bash -c CMD
 
 # 01, Random, random, <none>, <none> @ openb_pod_list_default
