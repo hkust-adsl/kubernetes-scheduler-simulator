@@ -1,9 +1,11 @@
 # 🚀 Kubernetes Scheduler Simulator
 
 The simulator evaluates different scheduling policies in GPU-sharing clusters.
-It includes the Fragmentation Gradient Descent (FGD) policy proposed in the ATC paper ([Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent](https://www.usenix.org/conference/atc23/presentation/weng)), along with other baseline policies (e.g., Best-fit, Dot-product, GPU Packing, GPU Clustering, Random-fit). 
+It includes the Fragmentation Gradient Descent (FGD) policy proposed in the [USENIX ATC 2023](https://www.usenix.org/conference/atc23) paper "[Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent](https://www.usenix.org/conference/atc23/presentation/weng)", along with other baseline policies (e.g., Best-fit, Dot-product, GPU Packing, GPU Clustering, Random-fit). 
 
 ## 🚧 Environment Setup
+
+### Build from stratch
 
 Please ensure that Go is installed.
 
@@ -17,6 +19,28 @@ $ go mod vendor
 
 ```bash
 $ make
+```
+
+### Run within Docker
+
+To save your time in the environment setup, we have just prepared a docker [image](https://hub.docker.com/r/qzweng/kubernetes-scheduler-simulator) with Golang 1.20.4, Python 3.10.11, and required libraries installed.
+
+Besides, we have copied the GitHub repo under the home directory and compile the executable binary file (`bin/simon`), therefore, `go mod vendor` and `make` commands are no longer needed.
+
+For the users not familiar with Docker, please refer to the official installation [guide](https://docs.docker.com/engine/install) on Linux, Mac, or Windows platform. For the others, the following commands are for your reference.
+
+```bash
+# step 1: pull image
+sudo docker pull qzweng/kubernetes-scheduler-simulator:atc23
+
+# step 2: launch the docker container
+sudo docker run -d --name=kss qzweng/kubernetes-scheduler-simulator:atc23 bash -c "sleep infinity"
+
+# step 3: execute commands inside the container
+sudo docker exec -it kss bash
+
+# step 4: go to the project folder and conduct experiments
+cd ~/kubernetes-scheduler-simulator
 ```
 
 ## 🔥 Quickstart Example
@@ -46,7 +70,7 @@ $ pip install -r requirements.txt
 Please cite our paper if it is helpful to your research.
 
 ```
-@inproceedings{FGD,
+@inproceedings{FGD2023,
     title = {Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent},
     author = {Qizhen Weng and Lingyun Yang and Yinghao Yu and Wei Wang and Xiaochuan Tang and Guodong Yang and Liping Zhang},
     booktitle = {2023 {USENIX} Annual Technical Conference},
