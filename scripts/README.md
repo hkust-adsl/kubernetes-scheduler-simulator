@@ -1,6 +1,8 @@
-**Commandline Options of Auxiliary Python scripts**
+# Command-line Options of Auxiliary Python scripts
 
-Thanks for your recommendation on further elaboration of the command line options of Python scripts! Since Kubernetes-scheduler-simulator borrows the structure from (open-simulator)[https://github.com/alibaba/open-simulator], there are quite a few configurations that can be tuned in a real cluster. Despite that `bin/simon` is capable of standing-alone execution, as demostrated in "Quick Start Example", we still wrap the `bin/simon` with these Python scripts, for the convenience in conducting large-scale experiments. Let me explain these options.
+Since Kubernetes-scheduler-simulator borrows the structure from [open-simulator](https://github.com/alibaba/open-simulator), there are quite a few configurations that can be tuned in a real cluster. Despite that `bin/simon` is capable of standing-alone execution, as demostrated in "Quick Start Example", we still wrap the `bin/simon` with these Python scripts, for the convenience in conducting large-scale experiments. Let me explain these options.
+
+## [`generate_config_and_run.py`](./generate_config_and_run.py)
 
 ```bash
 python3 scripts/generate_config_and_run.py \
@@ -23,6 +25,7 @@ python3 scripts/generate_config_and_run.py \
 - `--shuffle-pod=true`: whether to shuffle the pods' order or not (i.e., respect their original order of submission).   
 - `-z snapshot_dir`: directory to save the final state of the cluster in yaml files. This parameter would not affect the results.
 
+## [`analysis.py`](./analysis.py)
 
 ```bash
 python3 scripts/analysis.py -f -g ${EXPDIR} | tee -a "${EXPDIR}/terminal.out"
