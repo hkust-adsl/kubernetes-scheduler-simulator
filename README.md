@@ -3,6 +3,12 @@
 The simulator evaluates different scheduling policies in GPU-sharing clusters.
 It includes the Fragmentation Gradient Descent (FGD) policy proposed in the [USENIX ATC 2023](https://www.usenix.org/conference/atc23) paper "[Beware of Fragmentation: Scheduling GPU-Sharing Workloads with Fragmentation Gradient Descent](https://www.usenix.org/conference/atc23/presentation/weng)", along with other baseline policies (e.g., Best-fit, Dot-product, GPU Packing, GPU Clustering, Random-fit). 
 
+## 🎬 Demo
+| Step 1: Init and Run Experiments                                          |  Step 2: Result Analysis                                                  |
+| ------------------------------------------------------------------------  | ------------------------------------------------------------------------- |
+| [![](https://asciinema.org/a/666336.svg)](https://asciinema.org/a/666336) | [![](https://asciinema.org/a/666339.svg)](https://asciinema.org/a/666339) |
+
+
 ## 🚧 Environment Setup
 
 ### Build from stratch
