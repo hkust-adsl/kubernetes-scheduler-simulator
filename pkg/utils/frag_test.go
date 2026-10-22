@@ -283,3 +283,97 @@ func TestNodeGpuFragAmountBellman_NonDirect(t *testing.T) {
 }
 
 */
+func TestNodeGpuShareFragAmountScoreEquivalence(t *testing.T) {
+	workloads := []struct {
+		name string
+		pods simontype.TargetPodList
+	}{
+		{"gpu_workloads", TestingGenerateGetTypicalPods()},
+		{"mixed_gpu_cpu_workloads", TestingGenerateGetTypicalPodsWithNonGpu()},
+		{"empty_workloads", simontype.TargetPodList{}},
+	}
+
+	nodes := []simontype.NodeResource{
+		{
+			NodeName:         "partially_used",
+			MilliCpuLeft:     1000,
+			MilliCpuCapacity: 64000,
+			MilliGpuLeftList: []int64{200, 1000, 1000, 500},
+			GpuNumber:        4,
+			GpuType:          "1080",
+		},
+		{
+			NodeName:         "fully_available",
+			MilliCpuLeft:     64000,
+			MilliCpuCapacity: 64000,
+			MilliGpuLeftList: []int64{1000, 1000, 1000, 1000},
+			GpuNumber:        4,
+			GpuType:          "1080",
+		},
+		{
+			NodeName:         "cpu_exhausted",
+			MilliCpuLeft:     0,
+			MilliCpuCapacity: 64000,
+			MilliGpuLeftList: []int64{1000, 1000, 0, 0},
+			GpuNumber:        4,
+			GpuType:          "P100",
+		},
+		{
+			NodeName:         "gpu_exhausted",
+			MilliCpuLeft:     64000,
+			MilliCpuCapacity: 64000,
+			MilliGpuLeftList: []int64{0, 0, 0, 0},
+			GpuNumber:        4,
+			GpuType:          "P100",
+		},
+	}
+
+	for _, node := range nodes {
+		for _, workload := range workloads {
+			t.Run(node.NodeName+"/"+workload.name, func(t *testing.T) {
+				original := NodeGpuShareFragAmount(
+					node, workload.pods,
+				).FragAmountSumExceptQ3()
+
+				optimized := NodeGpuShareFragAmountScore(
+					node, workload.pods,
+				)
+
+				assert.InDelta(t, original, optimized, 1e-8)
+			})
+		}
+	}
+}
+
+var benchmarkFragScoreResult float64
+
+func BenchmarkNodeGpuShareFragAmountScore(b *testing.B) {
+	node := simontype.NodeResource{
+		NodeName:         "benchmark_8gpu",
+		MilliCpuLeft:     32000,
+		MilliCpuCapacity: 64000,
+		MilliGpuLeftList: []int64{1000, 750, 500, 250, 1000, 800, 400, 0},
+		GpuNumber:        8,
+		GpuType:          "T4",
+	}
+
+	pods := TestingGenerateGetTypicalPods()
+
+	b.Run("Original", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			benchmarkFragScoreResult = NodeGpuShareFragAmount(
+				node, pods,
+			).FragAmountSumExceptQ3()
+		}
+	})
+
+	b.Run("Optimized", func(b *testing.B) {
+		b.ReportAllocs()
+		for i := 0; i < b.N; i++ {
+			benchmarkFragScoreResult = NodeGpuShareFragAmountScore(
+				node, pods,
+			)
+		}
+	})
+}

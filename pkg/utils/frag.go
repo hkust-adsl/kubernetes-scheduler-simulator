@@ -177,8 +177,35 @@ func NodeGpuFragBasedOnSkyline(nodeRes simontype.NodeResource, skylinePods simon
 }
 
 func NodeGpuShareFragAmountScore(nodeRes simontype.NodeResource, typicalPods simontype.TargetPodList) float64 {
-	fragAmount := NodeGpuShareFragAmount(nodeRes, typicalPods)
-	return fragAmount.FragAmountSumExceptQ3()
+	gpuMilliLeftTotal := GetGpuMilliLeftTotal(nodeRes)
+	if gpuMilliLeftTotal == 0 {
+		return 0.0
+	}
+
+	score := 0.0
+
+	for _, pod := range typicalPods {
+		freq := pod.Percentage
+		if freq < 0 || freq > 1 {
+			log.Errorf("pod %v has bad freq: %f\n", pod.TargetPodResource, freq)
+			continue
+		}
+
+		fragType := GetNodePodFrag(nodeRes, pod.TargetPodResource)
+
+		if fragType == Q3Satisfied {
+			gpuFragMilli := GetGpuFragMilliByNodeResAndPodRes(
+				nodeRes,
+				pod.TargetPodResource,
+			)
+			score += freq * float64(gpuFragMilli)
+			continue
+		}
+
+		score += freq * float64(gpuMilliLeftTotal)
+	}
+
+	return score
 }
 
 func GetGpuFragMilliByNodeResAndPodRes(nodeRes simontype.NodeResource, podRes simontype.PodResource) int64 {
